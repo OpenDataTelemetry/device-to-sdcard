@@ -100,11 +100,12 @@ void app_main(void)
     // If format_if_mount_failed is set to true, SD card will be partitioned and
     // formatted in case when mounting fails.
     esp_vfs_fat_sdmmc_mount_config_t mount_config = {
-#ifdef CONFIG_EXAMPLE_FORMAT_IF_MOUNT_FAILED
-        .format_if_mount_failed = true,
-#else
+//#ifdef CONFIG_EXAMPLE_FORMAT_IF_MOUNT_FAILED
+        //.format_if_mount_failed = true,
+//#else
+
         .format_if_mount_failed = false,
-#endif // EXAMPLE_FORMAT_IF_MOUNT_FAILED
+//#endif // EXAMPLE_FORMAT_IF_MOUNT_FAILED
         .max_files = 5,
         .allocation_unit_size = 16 * 1024
     };
@@ -187,8 +188,8 @@ void app_main(void)
     // First create a file.
     const char *file_hello = MOUNT_POINT"/hello.txt";
     char data[EXAMPLE_MAX_CHAR_SIZE];
-    snprintf(data, EXAMPLE_MAX_CHAR_SIZE, "%s %s!\n", "Hello", card->cid.name);
-    ret = s_example_write_file(file_hello, data);
+    // snprintf(data, EXAMPLE_MAX_CHAR_SIZE, "%s %s!\n", "Hello", card->cid.name);
+    // ret = s_example_write_file(file_hello, data);
     if (ret != ESP_OK) {
         return;
     }
@@ -197,17 +198,13 @@ void app_main(void)
 
     // Check if destination file exists before renaming
     struct stat st;
-    if (stat(file_foo, &st) == 0) {
-        // Delete it if it exists
-        unlink(file_foo);
-    }
 
     // Rename original file
-    ESP_LOGI(TAG, "Renaming file %s to %s", file_hello, file_foo);
-    if (rename(file_hello, file_foo) != 0) {
-        ESP_LOGE(TAG, "Rename failed");
-        return;
-    }
+    // ESP_LOGI(TAG, "Renaming file %s to %s", file_hello, file_foo);
+    // if (rename(file_hello, file_foo) != 0) {
+    //     ESP_LOGE(TAG, "Rename failed");
+    //     return;
+    // }
 
     ret = s_example_read_file(file_foo);
     if (ret != ESP_OK) {
@@ -215,7 +212,7 @@ void app_main(void)
     }
 
     // Format FATFS
-#ifdef CONFIG_EXAMPLE_FORMAT_SD_CARD
+/*#ifdef CONFIG_EXAMPLE_FORMAT_SD_CARD
     ret = esp_vfs_fat_sdcard_format(mount_point, card);
     if (ret != ESP_OK) {
         ESP_LOGE(TAG, "Failed to format FATFS (%s)", esp_err_to_name(ret));
@@ -229,17 +226,18 @@ void app_main(void)
         ESP_LOGI(TAG, "file doesn't exist, formatting done");
     }
 #endif // CONFIG_EXAMPLE_FORMAT_SD_CARD
+*/
 
-    const char *file_nihao = MOUNT_POINT"/nihao.txt";
-    memset(data, 0, EXAMPLE_MAX_CHAR_SIZE);
-    snprintf(data, EXAMPLE_MAX_CHAR_SIZE, "%s %s!\n", "Nihao", card->cid.name);
-    ret = s_example_write_file(file_nihao, data);
+    const char *file_devops = MOUNT_POINT"/devops.txt";
+    // memset(data, 0, EXAMPLE_MAX_CHAR_SIZE);
+    // snprintf(data, EXAMPLE_MAX_CHAR_SIZE, "%s!\n", "olá devops");
+    ret = s_example_write_file(file_devops, data);
     if (ret != ESP_OK) {
         return;
     }
 
     //Open file for reading
-    ret = s_example_read_file(file_nihao);
+    ret = s_example_read_file(file_devops);
     if (ret != ESP_OK) {
         return;
     }
